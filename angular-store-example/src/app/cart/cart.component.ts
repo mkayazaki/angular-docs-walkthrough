@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { FormBuilder } from "@angular/forms";
 import { CartService } from "../cart.service";
 
 @Component({
@@ -6,10 +7,22 @@ import { CartService } from "../cart.service";
   templateUrl: "./cart.component.html",
   styleUrls: ["./cart.component.css"],
 })
-export class CartComponent implements OnInit {
+export class CartComponent {
   items = this.cartService.getItems();
 
-  constructor(private cartService: CartService) {}
+  checkoutForm = this.formBuilder.group({
+    name: "",
+    address: "",
+  });
 
-  ngOnInit(): void {}
+  constructor(
+    private cartService: CartService,
+    private formBuilder: FormBuilder
+  ) {}
+
+  onSubmit(): void {
+    this.items = this.cartService.clearCart();
+    console.warn("Your order has been submitted", this.checkoutForm.value);
+    this.checkoutForm.reset();
+  }
 }
